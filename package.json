@@ -1,0 +1,17 @@
+{
+  "name": "ll",
+  "version": "1.0.0",
+  "main": "./ll.js",
+  "types": "./ll.d.ts",
+  "repository": "https://github.com/LachlanArthur/LL",
+  "author": "LachlanArthur",
+  "license": "MIT",
+  "scripts": {
+    "build": "rollup -c"
+  },
+  "devDependencies": {
+    "rollup": "^0.65.2",
+    "rollup-plugin-typescript2": "^0.17.0",
+    "typescript": "^3.0.3"
+  }
+}
