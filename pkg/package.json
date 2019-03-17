@@ -1,0 +1,28 @@
+{
+  "name": "ll",
+  "version": "1.0.0",
+  "license": "MIT",
+  "source": "dist-src/index.js",
+  "types": "dist-types/index.d.ts",
+  "main": "dist-node/index.js",
+  "module": "dist-web/index.js",
+  "deno": "dist-deno/index.ts",
+  "pika": true,
+  "sideEffects": false,
+  "files": [
+    "dist-*/",
+    "assets/",
+    "bin/"
+  ],
+  "repository": "https://github.com/LachlanArthur/LL",
+  "dependencies": {},
+  "devDependencies": {
+    "@pika/plugin-build-deno": "^0.3.14",
+    "@pika/plugin-build-node": "^0.3.14",
+    "@pika/plugin-build-web": "^0.3.14",
+    "@pika/plugin-ts-standard-pkg": "^0.3.14",
+    "@types/jest": "^24.0.11",
+    "ts-jest": "^24.0.0",
+    "typescript": "^3.3.3333"
+  }
+}
