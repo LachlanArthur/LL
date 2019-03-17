@@ -5,5 +5,5 @@ export function $$<E extends Element = HTMLElement>( selectors: string, parent?:
 export function $$<E extends Element = HTMLElement>( selectors: string, parent: Element | Document = document ): Array<E> {
   return Array
     .from( parent.querySelectorAll<E>( selectors ) )
-    .filter( element => element != null );
+    .filter( element => element !== null );
 }
