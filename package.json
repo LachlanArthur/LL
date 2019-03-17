@@ -1,17 +1,36 @@
 {
   "name": "ll",
-  "version": "1.0.0",
-  "main": "./ll.js",
-  "types": "./ll.d.ts",
+  "version": "1.1.0",
   "repository": "https://github.com/LachlanArthur/LL",
   "author": "LachlanArthur",
   "license": "MIT",
   "scripts": {
-    "build": "rollup -c"
+    "test": "jest",
+    "build": "pack build"
+  },
+  "@pika/pack": {
+    "pipeline": [
+      [
+        "@pika/plugin-ts-standard-pkg"
+      ],
+      [
+        "@pika/plugin-build-node"
+      ],
+      [
+        "@pika/plugin-build-web"
+      ],
+      [
+        "@pika/plugin-build-deno"
+      ]
+    ]
   },
   "devDependencies": {
-    "rollup": "^0.65.2",
-    "rollup-plugin-typescript2": "^0.17.0",
-    "typescript": "^3.0.3"
+    "@pika/plugin-build-deno": "^0.3.14",
+    "@pika/plugin-build-node": "^0.3.14",
+    "@pika/plugin-build-web": "^0.3.14",
+    "@pika/plugin-ts-standard-pkg": "^0.3.14",
+    "@types/jest": "^24.0.11",
+    "ts-jest": "^24.0.0",
+    "typescript": "^3.3.3333"
   }
 }
