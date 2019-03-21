@@ -20,7 +20,7 @@
         "@pika/plugin-build-web"
       ],
       [
-        "@pika/plugin-build-deno"
+        "@pika/plugin-build-deno", {"exclude": [ "__tests__/**/*" ] }
       ]
     ]
   },
