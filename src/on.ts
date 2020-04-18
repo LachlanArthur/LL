@@ -63,30 +63,48 @@ export interface DocumentEventMapExtra extends DocumentEventMap {
   'DOMContentLoaded': Event;
 }
 
+type UnknownEventMap = { [ eventName: string ]: Event };
+
 export type EventMapFor<T extends EventTarget> =
   // Ensure these are sorted correctly
 
-  T extends AudioScheduledSourceNode ? AudioScheduledSourceNodeEventMap : // extends AudioNode
-  T extends AudioWorkletNode ? AudioWorkletNodeEventMap : // extends AudioNode
-  T extends ScriptProcessorNode ? ScriptProcessorNodeEventMap : // extends AudioNode
+  T extends AudioNode ? (
+    T extends AudioScheduledSourceNode ? AudioScheduledSourceNodeEventMap :
+    T extends AudioWorkletNode ? AudioWorkletNodeEventMap :
+    T extends ScriptProcessorNode ? ScriptProcessorNodeEventMap :
+    UnknownEventMap
+  ) :
 
-  T extends HTMLBodyElement ? HTMLBodyElementEventMap : // extends HTMLElement
-  T extends HTMLFrameSetElement ? HTMLFrameSetElementEventMap : // extends HTMLElement
-  T extends HTMLMarqueeElement ? HTMLMarqueeElementEventMap : // extends HTMLElement
-  T extends HTMLMediaElement ? HTMLMediaElementEventMap : // extends HTMLElement
-  T extends HTMLVideoElement ? HTMLVideoElementEventMap : // extends HTMLElement
-  T extends HTMLElement ? HTMLElementEventMap : // extends Element
-  T extends Element ? ElementEventMap : // extends Node
-  T extends Document ? DocumentEventMapExtra : // extends Node
+  T extends Node ? (
+    T extends Element ? (
+      T extends HTMLElement ? (
+        T extends HTMLBodyElement ? HTMLBodyElementEventMap :
+        T extends HTMLFrameSetElement ? HTMLFrameSetElementEventMap :
+        T extends HTMLMarqueeElement ? HTMLMarqueeElementEventMap :
+        T extends HTMLMediaElement ? HTMLMediaElementEventMap :
+        T extends HTMLVideoElement ? HTMLVideoElementEventMap :
+        HTMLElementEventMap
+      ) :
+      ElementEventMap
+    ) :
+    T extends Document ? DocumentEventMapExtra :
+    UnknownEventMap
+  ) :
 
-  T extends OfflineAudioContext ? OfflineAudioContextEventMap : // extends BaseAudioContext
-  T extends BaseAudioContext ? BaseAudioContextEventMap :
+  T extends BaseAudioContext ? (
+    T extends OfflineAudioContext ? OfflineAudioContextEventMap :
+    BaseAudioContextEventMap
+  ) :
 
-  T extends IDBOpenDBRequest ? IDBOpenDBRequestEventMap : // extends IDBRequest
-  T extends IDBRequest ? IDBRequestEventMap :
+  T extends IDBRequest ? (
+    T extends IDBOpenDBRequest ? IDBOpenDBRequestEventMap :
+    IDBRequestEventMap
+  ) :
 
-  T extends SVGSVGElement ? SVGSVGElementEventMap : // extends SVGGraphicsElement, SVGElement
-  T extends SVGElement ? SVGElementEventMap :
+  T extends SVGElement ? (
+    T extends SVGSVGElement ? SVGSVGElementEventMap :
+    SVGElementEventMap
+  ) :
 
   T extends AbortSignal ? AbortSignalEventMap :
   T extends Animation ? AnimationEventMap :
@@ -129,7 +147,7 @@ export type EventMapFor<T extends EventTarget> =
   T extends Worker ? WorkerEventMap :
   T extends XMLHttpRequest ? XMLHttpRequestEventMap :
   T extends XMLHttpRequestEventTarget ? XMLHttpRequestEventTargetEventMap :
-  { [ eventName: string ]: Event };
+  UnknownEventMap;
 
 type MaybeArray<T> = T | Array<T>;
 
@@ -162,9 +180,10 @@ export function on<
 
     if ( typeof targetFilter !== 'undefined' ) {
       listenersArray = listenersArray.map( ( f ) => function ( this: tObj, event: tEvent ) {
-        if ( event.target instanceof Element ) {
-          const target = event.target.closest( targetFilter );
-          if ( target ) f.call( target as any, event );
+        const target = ( event as unknown as Event ).target;
+        if ( target instanceof Element ) {
+          const filteredTarget = target.closest( targetFilter );
+          if ( filteredTarget ) f.call( filteredTarget as any, event );
         }
       } );
     }
@@ -172,7 +191,7 @@ export function on<
     for ( let element of elementsArray ) {
       for ( let event of eventsArray ) {
         for ( let listener of listenersArray ) {
-          element.addEventListener.call( element, event, listener as EventListener, options );
+          element.addEventListener.call( element, event, listener as unknown as EventListener, options );
         }
       }
     }
